@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Shuttle Showdown — Badminton Tournament</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --green: #16a34a;
+      --green-light: #dcfce7;
+      --green-dark: #14532d;
+      --yellow: #facc15;
+      --yellow-light: #fef9c3;
+      --dark: #0f172a;
+      --dark2: #1e293b;
+      --dark3: #334155;
+      --gray: #64748b;
+      --light: #f8fafc;
+      --white: #ffffff;
+      --border: #e2e8f0;
+      --radius: 12px;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--dark);
+      color: var(--white);
+      line-height: 1.6;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(15,23,42,0.95);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid #1e293b;
+      padding: 0 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+    }
+    .nav-logo {
+      font-size: 20px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--white);
+      text-decoration: none;
+    }
+    .nav-logo span { color: var(--green); }
+    .nav-links { display: flex; gap: 24px; }
+    .nav-links a {
+      color: #94a3b8;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--white); }
+
+    /* ── HERO ── */
+    .hero {
+      background: linear-gradient(135deg, #0f172a 0%, #052e16 50%, #0f172a 100%);
+      padding: 80px 2rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      border-bottom: 1px solid #1e293b;
+    }
+    .hero::before {
+      content: '🏸';
+      position: absolute;
+      font-size: 300px;
+      opacity: 0.04;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+    .hero-badge {
+      display: inline-block;
+      background: var(--green-light);
+      color: var(--green-dark);
+      font-size: 12px;
+      font-weight: 600;
+      padding: 4px 14px;
+      border-radius: 100px;
+      margin-bottom: 20px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+    .hero h1 {
+      font-size: clamp(36px, 6vw, 72px);
+      font-weight: 800;
+      line-height: 1.1;
+      margin-bottom: 16px;
+    }
+    .hero h1 span { color: var(--green); }
+    .hero p {
+      font-size: 18px;
+      color: #94a3b8;
+      max-width: 540px;
+      margin: 0 auto 32px;
+    }
+    .hero-meta {
+      display: flex;
+      justify-content: center;
+      gap: 32px;
+      flex-wrap: wrap;
+    }
+    .hero-meta-item {
+      text-align: center;
+    }
+    .hero-meta-item .val {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--yellow);
+    }
+    .hero-meta-item .lbl {
+      font-size: 12px;
+      color: #94a3b8;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* ── SECTION ── */
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 1.5rem; }
+    section { padding: 64px 0; }
+    section:nth-child(even) { background: #090f1a; }
+    .section-header { text-align: center; margin-bottom: 48px; }
+    .section-header h2 {
+      font-size: 32px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .section-header p { color: #94a3b8; font-size: 16px; }
+    .tag {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--green);
+      margin-bottom: 8px;
+    }
+
+    /* ── WINNERS ── */
+    .winners-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+    }
+    .winner-card {
+      background: var(--dark2);
+      border: 1px solid #1e293b;
+      border-radius: var(--radius);
+      padding: 28px 20px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.2s, border-color 0.2s;
+    }
+    .winner-card:hover { transform: translateY(-4px); border-color: var(--green); }
+    .winner-card.gold { border-color: #854d0e; background: linear-gradient(135deg, #1c1a10, #1e293b); }
+    .winner-card.silver { border-color: #475569; }
+    .winner-card.bronze { border-color: #7c3b1e; }
+    .medal-icon { font-size: 48px; margin-bottom: 12px; display: block; }
+    .winner-position {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 8px;
+    }
+    .gold .winner-position { color: var(--yellow); }
+    .silver .winner-position { color: #94a3b8; }
+    .bronze .winner-position { color: #f97316; }
+    .winner-name {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    .winner-category {
+      font-size: 13px;
+      color: #94a3b8;
+    }
+
+    /* ── SEMIFINALISTS ── */
+    .sf-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+    }
+    .sf-card {
+      background: var(--dark2);
+      border: 1px solid #1e293b;
+      border-radius: var(--radius);
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      transition: border-color 0.2s;
+    }
+    .sf-card:hover { border-color: #334155; }
+    .sf-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #16a34a, #059669);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+    .sf-info .sf-name { font-weight: 600; font-size: 15px; }
+    .sf-info .sf-match { font-size: 12px; color: #64748b; margin-top: 2px; }
+
+    /* ── GALLERY ── */
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 16px;
+    }
+    .gallery-item {
+      border-radius: var(--radius);
+      overflow: hidden;
+      position: relative;
+      aspect-ratio: 4/3;
+      background: var(--dark2);
+      border: 1px solid #1e293b;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 8px;
+      cursor: pointer;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .gallery-item:hover { border-color: var(--green); transform: scale(1.02); }
+    .gallery-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      position: absolute;
+      top: 0; left: 0;
+    }
+    .gallery-item .photo-label {
+      font-size: 13px;
+      color: #64748b;
+    }
+    .gallery-item .photo-icon { font-size: 32px; }
+    .gallery-overlay {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      background: linear-gradient(transparent, rgba(0,0,0,0.8));
+      padding: 16px;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+    .gallery-item:hover .gallery-overlay { opacity: 1; }
+    .gallery-overlay span { font-size: 13px; font-weight: 500; }
+
+    /* ── MATCHES ── */
+    .matches-list { display: flex; flex-direction: column; gap: 12px; }
+    .match-row {
+      background: var(--dark2);
+      border: 1px solid #1e293b;
+      border-radius: var(--radius);
+      padding: 16px 20px;
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 16px;
+    }
+    .match-player { font-weight: 600; font-size: 15px; }
+    .match-player.right { text-align: right; }
+    .match-score {
+      background: var(--dark3);
+      border-radius: 8px;
+      padding: 6px 16px;
+      font-weight: 700;
+      font-size: 16px;
+      text-align: center;
+      white-space: nowrap;
+    }
+    .match-score.final { color: var(--yellow); }
+    .match-tag {
+      display: inline-block;
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 100px;
+      margin-bottom: 4px;
+    }
+    .match-tag.final-tag { background: #fef9c3; color: #854d0e; }
+    .match-tag.sf-tag { background: #dcfce7; color: #14532d; }
+
+    /* ── FOOTER ── */
+    footer {
+      background: #060c16;
+      border-top: 1px solid #1e293b;
+      padding: 32px 2rem;
+      text-align: center;
+      color: #475569;
+      font-size: 14px;
+    }
+    footer strong { color: #94a3b8; }
+
+    /* ── UPLOAD SECTION ── */
+    .upload-box {
+      border: 2px dashed #334155;
+      border-radius: var(--radius);
+      padding: 40px;
+      text-align: center;
+      margin-top: 24px;
+      transition: border-color 0.2s;
+    }
+    .upload-box:hover { border-color: var(--green); }
+    .upload-box p { color: #64748b; font-size: 14px; margin-top: 8px; }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: opacity 0.2s;
+      text-decoration: none;
+      margin-top: 16px;
+    }
+    .btn:hover { opacity: 0.85; }
+    .btn-green { background: var(--green); color: white; }
+
+    @media (max-width: 640px) {
+      nav { padding: 0 1rem; }
+      .nav-links { display: none; }
+      .hero { padding: 48px 1rem; }
+      .match-row { grid-template-columns: 1fr; text-align: center; }
+      .match-player.right { text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="#">🏸 Shuttle <span>Showdown</span></a>
+  <div class="nav-links">
+    <a href="#winners">Winners</a>
+    <a href="#semifinalists">Semi-finals</a>
+    <a href="#matches">Results</a>
+    <a href="#gallery">Gallery</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-badge">🏆 Tournament is about to begin</div>
+  <h1>Shuttle <span>Showdown</span><br/>2026</h1>
+  <p>An epic battle of smashes, drops, and clears. Here's how it all unfolded.</p>
+  <div class="hero-meta">
+    <div class="hero-meta-item">
+      <div class="val">24</div>
+      <div class="lbl">Players</div>
+    </div>
+    <div class="hero-meta-item">
+      <div class="val">18</div>
+      <div class="lbl">Matches</div>
+    </div>
+    <div class="hero-meta-item">
+      <div class="val">3</div>
+      <div class="lbl">Days</div>
+    </div>
+    <div class="hero-meta-item">
+      <div class="val">🥇</div>
+      <div class="lbl">Champion crowned</div>
+    </div>
+  </div>
+</div>
+
+<!-- WINNERS -->
+<section id="winners">
+  <div class="container">
+    <div class="section-header">
+      <div class="tag">🏆 Podium</div>
+      <h2>Winners & runners-up</h2>
+      <p>The champions who fought their way to the top</p>
+    </div>
+    <div class="winners-grid">
+      <div class="winner-card gold">
+        <span class="medal-icon">🥇</span>
+        <div class="winner-position">Champion</div>
+        <div class="winner-name">Player Name</div>
+        <div class="winner-category">Men's Singles</div>
+      </div>
+      <div class="winner-card silver">
+        <span class="medal-icon">🥈</span>
+        <div class="winner-position">Runner-up</div>
+        <div class="winner-name">Player Name</div>
+        <div class="winner-category">Men's Singles</div>
+      </div>
+      <div class="winner-card bronze">
+        <span class="medal-icon">🥉</span>
+        <div class="winner-position">3rd Place</div>
+        <div class="winner-name">Player Name</div>
+        <div class="winner-category">Women's Singles</div>
+      </div>
+      <div class="winner-card gold">
+        <span class="medal-icon">🥇</span>
+        <div class="winner-position">Doubles Champions</div>
+        <div class="winner-name">Team Name</div>
+        <div class="winner-category">Men's Doubles</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SEMIFINALISTS -->
+<section id="semifinalists">
+  <div class="container">
+    <div class="section-header">
+      <div class="tag">⚡ Semi-finals</div>
+      <h2>Semifinalists</h2>
+      <p>The four players who made it to the last four</p>
+    </div>
+    <div class="sf-grid">
+      <div class="sf-card">
+        <div class="sf-avatar">A</div>
+        <div class="sf-info">
+          <div class="sf-name">Player A</div>
+          <div class="sf-match">Semi-final 1 · Won</div>
+        </div>
+      </div>
+      <div class="sf-card">
+        <div class="sf-avatar">B</div>
+        <div class="sf-info">
+          <div class="sf-name">Player B</div>
+          <div class="sf-match">Semi-final 1 · Lost</div>
+        </div>
+      </div>
+      <div class="sf-card">
+        <div class="sf-avatar">C</div>
+        <div class="sf-info">
+          <div class="sf-name">Player C</div>
+          <div class="sf-match">Semi-final 2 · Won</div>
+        </div>
+      </div>
+      <div class="sf-card">
+        <div class="sf-avatar">D</div>
+        <div class="sf-info">
+          <div class="sf-name">Player D</div>
+          <div class="sf-match">Semi-final 2 · Lost</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MATCH RESULTS -->
+<section id="matches">
+  <div class="container">
+    <div class="section-header">
+      <div class="tag">📊 Results</div>
+      <h2>Match results</h2>
+      <p>Full scoreboard from semi-finals to the final</p>
+    </div>
+    <div class="matches-list">
+
+      <div style="font-size:13px; color:#64748b; font-weight:600; padding: 4px 0; text-transform:uppercase; letter-spacing:0.05em;">Semi-finals</div>
+
+      <div class="match-row">
+        <div>
+          <div class="match-tag sf-tag">Semi-final 1</div>
+          <div class="match-player">Player A</div>
+        </div>
+        <div class="match-score">0–0 · 0–0</div>
+        <div>
+          <div class="match-player right">Player B</div>
+        </div>
+      </div>
+
+      <div class="match-row">
+        <div>
+          <div class="match-tag sf-tag">Semi-final 2</div>
+          <div class="match-player">Player C</div>
+        </div>
+        <div class="match-score">0–0 · 0–0 · 0–0</div>
+        <div>
+          <div class="match-player right">Player D</div>
+        </div>
+      </div>
+
+      <div style="font-size:13px; color:#64748b; font-weight:600; padding: 12px 0 4px; text-transform:uppercase; letter-spacing:0.05em;">Final</div>
+
+      <div class="match-row" style="border-color: #854d0e;">
+        <div>
+          <div class="match-tag final-tag">🏆 Final</div>
+          <div class="match-player">Player A</div>
+        </div>
+        <div class="match-score final">0–0 · 0–0</div>
+        <div>
+          <div class="match-player right">Player C</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- GALLERY -->
+<section id="gallery">
+  <div class="container">
+    <div class="section-header">
+      <div class="tag">📸 Gallery</div>
+      <h2>Tournament photos</h2>
+      <p>Moments from semi-finals, finals, and the trophy ceremony</p>
+    </div>
+    <div class="gallery-grid">
+      <!-- Replace these divs with <img> tags once you have actual photos -->
+      <div class="gallery-item">
+        <div class="photo-icon">🏸</div>
+        <div class="photo-label">Semi-final 1 action</div>
+        <div class="gallery-overlay"><span>Semi-final 1</span></div>
+      </div>
+      <div class="gallery-item">
+        <div class="photo-icon">🏸</div>
+        <div class="photo-label">Semi-final 2 action</div>
+        <div class="gallery-overlay"><span>Semi-final 2</span></div>
+      </div>
+      <div class="gallery-item">
+        <div class="photo-icon">🏆</div>
+        <div class="photo-label">Trophy ceremony</div>
+        <div class="gallery-overlay"><span>Trophy ceremony</span></div>
+      </div>
+      <div class="gallery-item">
+        <div class="photo-icon">🥇</div>
+        <div class="photo-label">Winner celebration</div>
+        <div class="gallery-overlay"><span>Winner celebration</span></div>
+      </div>
+      <div class="gallery-item">
+        <div class="photo-icon">🤝</div>
+        <div class="photo-label">Finalists handshake</div>
+        <div class="gallery-overlay"><span>Finalists</span></div>
+      </div>
+      <div class="gallery-item">
+        <div class="photo-icon">👥</div>
+        <div class="photo-label">Group photo</div>
+        <div class="gallery-overlay"><span>Group photo</span></div>
+      </div>
+    </div>
+
+    <!-- HOW TO ADD YOUR PHOTOS -->
+    <div class="upload-box">
+      <div style="font-size:36px;">📷</div>
+      <p style="margin-top:12px; color:#94a3b8; font-size:15px;">To add your actual photos, replace the gallery divs with:</p>
+      <pre style="background:#0f172a; border:1px solid #1e293b; border-radius:8px; padding:16px; margin:16px 0; text-align:left; font-size:12px; color:#86efac; overflow-x:auto;">&lt;div class="gallery-item"&gt;
+  &lt;img src="your-photo.jpg" alt="Match photo" /&gt;
+  &lt;div class="gallery-overlay"&gt;
+    &lt;span&gt;Caption here&lt;/span&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</pre>
+      <p>Put your .jpg photos in the same folder as index.html</p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>🏸 <strong>Shuttle Showdown 2026</strong> &nbsp;·&nbsp; Bangalore, India</p>
+  <p style="margin-top:8px;">Built and deployed on <strong>Vercel</strong> &nbsp;·&nbsp; Powered by HTML & CSS</p>
+</footer>
+
+</body>
+</html>
+EOF
