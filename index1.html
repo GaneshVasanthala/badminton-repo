@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Shuttle Showdown — Badminton Tournament 2025</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --green: #16a34a;
+      --green-light: #dcfce7;
+      --green-dark: #14532d;
+      --yellow: #facc15;
+      --dark: #0f172a;
+      --dark2: #1e293b;
+      --dark3: #334155;
+      --white: #ffffff;
+      --gray: #94a3b8;
+      --border: #1e293b;
+      --radius: 12px;
+    }
+    body { font-family: 'Inter', sans-serif; background: var(--dark); color: var(--white); line-height: 1.6; }
+
+    /* NAV */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(15,23,42,0.96); backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 2rem; display: flex; align-items: center;
+      justify-content: space-between; height: 64px;
+    }
+    .nav-logo { font-size: 20px; font-weight: 800; display: flex; align-items: center; gap: 8px; color: var(--white); text-decoration: none; }
+    .nav-logo span { color: var(--green); }
+    .nav-links { display: flex; gap: 24px; }
+    .nav-links a { color: var(--gray); text-decoration: none; font-size: 14px; font-weight: 500; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--white); }
+
+    /* HERO */
+    .hero {
+      background: linear-gradient(135deg, #0f172a 0%, #052e16 50%, #0f172a 100%);
+      padding: 90px 2rem 70px; text-align: center; position: relative; overflow: hidden;
+      border-bottom: 1px solid var(--border);
+    }
+    .hero::before { content: '🏸'; position: absolute; font-size: 320px; opacity: 0.04; top: 50%; left: 50%; transform: translate(-50%,-50%); }
+    .hero-badge {
+      display: inline-block; background: var(--green-light); color: var(--green-dark);
+      font-size: 12px; font-weight: 600; padding: 4px 14px; border-radius: 100px;
+      margin-bottom: 20px; letter-spacing: 0.06em; text-transform: uppercase;
+    }
+    .hero h1 { font-size: clamp(36px, 6vw, 72px); font-weight: 800; line-height: 1.1; margin-bottom: 16px; }
+    .hero h1 span { color: var(--green); }
+    .hero p { font-size: 18px; color: var(--gray); max-width: 540px; margin: 0 auto 40px; }
+
+    .hero-meta { display: flex; justify-content: center; gap: 40px; flex-wrap: wrap; }
+    .hero-meta-item { text-align: center; }
+    .hero-meta-item .val { font-size: 30px; font-weight: 700; color: var(--yellow); }
+    .hero-meta-item .lbl { font-size: 12px; color: var(--gray); text-transform: uppercase; letter-spacing: 0.06em; margin-top: 2px; }
+
+    /* COUNTDOWN */
+    .countdown-bar {
+      background: #052e16; border-top: 1px solid #14532d; border-bottom: 1px solid #14532d;
+      padding: 20px 2rem; text-align: center;
+    }
+    .countdown-bar p { font-size: 13px; color: #4ade80; font-weight: 500; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.08em; }
+    .countdown-boxes { display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; }
+    .cd-box { background: var(--dark2); border: 1px solid #14532d; border-radius: 10px; padding: 12px 20px; min-width: 72px; text-align: center; }
+    .cd-box .num { font-size: 28px; font-weight: 700; color: var(--yellow); font-variant-numeric: tabular-nums; }
+    .cd-box .unit { font-size: 11px; color: var(--gray); text-transform: uppercase; letter-spacing: 0.06em; }
+
+    /* SECTIONS */
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 1.5rem; }
+    section { padding: 64px 0; }
+    section:nth-child(even) { background: #090f1a; }
+    .section-header { text-align: center; margin-bottom: 48px; }
+    .section-header h2 { font-size: 32px; font-weight: 700; margin-bottom: 8px; }
+    .section-header p { color: var(--gray); font-size: 16px; }
+    .tag { display: inline-block; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--green); margin-bottom: 8px; }
+
+    /* TOURNAMENT INFO CARDS */
+    .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+    .info-card {
+      background: var(--dark2); border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 24px 20px; display: flex; align-items: flex-start; gap: 16px;
+      transition: border-color 0.2s;
+    }
+    .info-card:hover { border-color: var(--green); }
+    .info-icon { font-size: 28px; flex-shrink: 0; }
+    .info-label { font-size: 12px; color: var(--gray); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px; }
+    .info-value { font-size: 16px; font-weight: 600; }
+
+    /* POOL TABLES */
+    .pools-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+    .pool-card {
+      background: var(--dark2); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden;
+      transition: border-color 0.2s;
+    }
+    .pool-card:hover { border-color: var(--green); }
+    .pool-header {
+      padding: 16px 20px; display: flex; align-items: center; gap: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+    .pool-letter {
+      width: 40px; height: 40px; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; font-weight: 700; flex-shrink: 0;
+    }
+    .pool-a .pool-letter { background: #1d4ed8; color: #bfdbfe; }
+    .pool-b .pool-letter { background: #7e22ce; color: #e9d5ff; }
+    .pool-c .pool-letter { background: #b45309; color: #fde68a; }
+    .pool-d .pool-letter { background: #be123c; color: #fecdd3; }
+    .pool-title { font-size: 16px; font-weight: 600; }
+    .pool-sub { font-size: 12px; color: var(--gray); margin-top: 2px; }
+
+    .pool-players { padding: 8px 0; }
+    .player-row {
+      display: flex; align-items: center; gap: 12px;
+      padding: 10px 20px; border-bottom: 1px solid #0f172a;
+      transition: background 0.15s;
+    }
+    .player-row:last-child { border-bottom: none; }
+    .player-row:hover { background: #0f172a; }
+    .player-num {
+      width: 24px; height: 24px; border-radius: 50%;
+      background: var(--dark3); color: var(--gray);
+      font-size: 11px; font-weight: 600;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .player-name { font-size: 14px; font-weight: 500; flex: 1; }
+    .player-badge {
+      font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 100px;
+      text-transform: uppercase; letter-spacing: 0.04em;
+    }
+    .badge-seed { background: #fef9c3; color: #854d0e; }
+    .badge-wild { background: #f0fdf4; color: #166534; }
+
+    /* SCHEDULE */
+    .schedule-list { display: flex; flex-direction: column; gap: 12px; }
+    .schedule-day {
+      background: var(--dark2); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden;
+    }
+    .schedule-day-header {
+      background: #052e16; border-bottom: 1px solid #14532d;
+      padding: 12px 20px; display: flex; align-items: center; gap: 10px;
+    }
+    .schedule-day-header .day-label { font-size: 14px; font-weight: 600; color: #4ade80; }
+    .schedule-day-header .day-date { font-size: 13px; color: var(--gray); margin-left: auto; }
+    .schedule-items { padding: 8px 0; }
+    .schedule-item {
+      display: flex; align-items: center; gap: 16px;
+      padding: 10px 20px; border-bottom: 1px solid #0f172a;
+    }
+    .schedule-item:last-child { border-bottom: none; }
+    .schedule-time { font-size: 13px; color: var(--yellow); font-weight: 500; min-width: 60px; }
+    .schedule-event { font-size: 14px; }
+    .schedule-pool { font-size: 12px; color: var(--gray); margin-left: auto; }
+
+    /* FORMAT */
+    .format-steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
+    .format-step {
+      background: var(--dark2); border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 24px 20px; text-align: center; position: relative;
+    }
+    .step-num {
+      width: 40px; height: 40px; border-radius: 50%;
+      background: var(--green); color: white; font-size: 16px; font-weight: 700;
+      display: flex; align-items: center; justify-content: center; margin: 0 auto 12px;
+    }
+    .format-step h3 { font-size: 15px; font-weight: 600; margin-bottom: 6px; }
+    .format-step p { font-size: 13px; color: var(--gray); }
+
+    /* FOOTER */
+    footer {
+      background: #060c16; border-top: 1px solid var(--border);
+      padding: 32px 2rem; text-align: center; color: #475569; font-size: 14px;
+    }
+    footer strong { color: var(--gray); }
+
+    @media (max-width: 640px) {
+      nav { padding: 0 1rem; }
+      .nav-links { display: none; }
+      .hero { padding: 48px 1rem 40px; }
+      .hero-meta { gap: 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── NAV ── -->
+<nav>
+  <a class="nav-logo" href="#">🏸 Shuttle <span>Showdown</span></a>
+  <div class="nav-links">
+    <a href="#info">About</a>
+    <a href="#pools">Pools</a>
+    <a href="#schedule">Schedule</a>
+    <a href="#format">Format</a>
+  </div>
+</nav>
+
+<!-- ── HERO ── -->
+<div class="hero">
+  <div class="hero-badge">🏸 Registration Open</div>
+  <h1>Shuttle <span>Showdown</span><br/>2025</h1>
+  <p>A friendly badminton tournament among friends. May the best smash win!</p>
+  <div class="hero-meta">
+    <div class="hero-meta-item">
+      <div class="val">24</div>
+      <div class="lbl">Players</div>
+    </div>
+    <div class="hero-meta-item">
+      <div class="val">4</div>
+      <div class="lbl">Pool Groups</div>
+    </div>
+    <div class="hero-meta-item">
+      <div class="val">3</div>
+      <div class="lbl">Days</div>
+    </div>
+    <div class="hero-meta-item">
+      <div class="val">🏆</div>
+      <div class="lbl">Champion awaited</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── COUNTDOWN ── -->
+<div class="countdown-bar">
+  <p>⏳ Tournament starts in</p>
+  <div class="countdown-boxes">
+    <div class="cd-box"><div class="num" id="cd-days">00</div><div class="unit">Days</div></div>
+    <div class="cd-box"><div class="num" id="cd-hours">00</div><div class="unit">Hours</div></div>
+    <div class="cd-box"><div class="num" id="cd-mins">00</div><div class="unit">Mins</div></div>
+    <div class="cd-box"><div class="num" id="cd-secs">00</div><div class="unit">Secs</div></div>
+  </div>
+</div>
+
+<!-- ── TOURNAMENT INFO ── -->
+<section id="info">
+  <div class="container">
+    <div class="section-header">
+      <div class="tag">📋 Tournament Info</div>
+      <h2>About the tournament</h2>
+      <p>Everything you need to know before the first serve</p>
+    </div>
+    <div class="info-grid">
+      <div class="info-card">
+        <div class="info-icon">📅</div>
+        <div>
+          <div class="info-label">Date</div>
+          <div class="info-value">July 20 – 22, 2025</div>
+        </div>
+      </div>
+      <div class="info-card">
+        <div class="info-icon">📍</div>
+        <div>
+          <div class="info-label">Venue</div>
+          <div class="info-value">Bangalore Indoor Court</div>
+        </div>
+      </div>
+      <div class="info-card">
+        <div class="info-icon">🏸</div>
+        <div>
+          <div class="info-label">Category</div>
+          <div class="info-value">Men's Singles & Doubles</div>
+        </div>
+      </div>
+      <div class="info-card">
+        <div class="info-icon">👥</div>
+        <div>
+          <div class="info-label">Total Players</div>
+          <div class="info-value">24 Players</div>
+        </div>
+      </div>
+      <div class="info-card">
+        <div class="info-icon">🎯</div>
+        <div>
+          <div class="info-label">Format</div>
+          <div class="info-value">Pool Stage + Knockouts</div>
+        </div>
+      </div>
+      <div class="info-card">
+        <div class="info-icon">🏆</div>
+        <div>
+          <div class="info-label">Prize</div>
+          <div class="info-value">Trophy + Bragging Rights</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── POOLS ── -->
+<section id="pools">
+  <div class="container">
+    <div class="section-header">
+      <div class="tag">🎯 Pool Draw</div>
+      <h2>Pool groups</h2>
+      <p>Top 2 from each pool advance to the knockout stage</p>
+    </div>
+    <div class="pools-grid">
+
+      <!-- POOL A -->
+      <div class="pool-card pool-a">
+        <div class="pool-header">
+          <div class="pool-letter">A</div>
+          <div>
+            <div class="pool-title">Pool A</div>
+            <div class="pool-sub">6 players · Court 1</div>
+          </div>
+        </div>
+        <div class="pool-players">
+          <div class="player-row">
+            <div class="player-num">1</div>
+            <div class="player-name">Player Name 1</div>
+            <span class="player-badge badge-seed">Seed 1</span>
+          </div>
+          <div class="player-row">
+            <div class="player-num">2</div>
+            <div class="player-name">Player Name 2</div>
+          </div>
+          <div class="player-row">
+            <div class="player-num">3</div>
+            <div class="player-name">Player Name 3</div>
+          </div>
+          <div class="player-row">
+            <div class="player-num">4</div>
+            <div class="player-name">Player Name 4</div>
+          </div>
+          <div class="player-row">
+            <div class="player-num">5</div>
+            <div class="player-name">Player Name 5</div>
+          </div>
+          <div class="player-row">
+            <div class="player-num">6</div>
+            <div class="player-name">Player Name 6</div>
+            <span class="player-badge badge-wild">Wild card</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- POOL B -->
+      <div class="pool-card pool-b">
+        <div class="pool-header">
+          <div class="pool-letter">B</div>
+          <div>
+            <div class="pool-title">Pool B</div>
+            <div class="pool-sub">6 players · Court 2</div>
+          </div>
+        </div>
+        <div class="pool-players">
+          <div class="player-row">
+            <div class="player-num">1</div>
+            <div class="player-name">Player Name 1</div>
+            <span class="player-badge badge-seed">Seed 2</span>
+          </div>
+          <div class="player-row">
+            <div class="player-num">2</div>
+            <div class="player-name">Player Name 2</div>
+          </div>
+          <div class="player-row">
+            <div class="player-num">3</div>
+            <div class="player-name">Player Name 3</div>
+          </div>
+          <div class="player-row">
+            <div class="player-num">4</div>
+            <div class="player-name">Player Name 4</div>
+          </div>
+          <div class="player-row">
+            <div class="player-num">5</div>
+            <div class="player-name">Player Name 5</div>
+          </div>
+          <div class="player-row">
+            <div class="player-num">6</div>
+            <div class="player-name">Player Name 6</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- POOL C -->
+      <div class="pool-card pool-c">
+        <div class="pool-header">
+          <div class="pool-letter">C</div>
+          <div>
+            <div class="pool-title">Pool C</div>
+            <div class="pool-sub">6 players · Court 1</div>
+          </div>
+        </div>
+        <div class="pool-players">
+          <div class="player-row">
+            <div class="player-num">1</div>
+            <div class="player-name">Player Name 1</div>
+            <span class="player-badge badge-seed">Seed 3</span>
+          </div>
+          <div class="player-row">
+            <div class="player-num">2</div>
+            <div class="player-name">Player Name 2</div>
+          </div>
+          <div class="player-row">
+            <div class="player-num">3</div>
+            <div class="player-name">Player Name 3</div>
+          </div>
+          <div class="player-row">
+            <div class="player-num">4</div>
+            <div class="player-name">Player Name 4</div>
+          </div>
+          <div class="player-row">
+            <div class="player-num">5</div>
+            <div class="player-name">Player Name 5</div>
+          </div>
+          <div class="player-row">
+            <div class="player-num">6</div>
+            <div class="player-name">Player Name 6</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- POOL D -->
+      <div class="pool-card pool-d">
+        <div class="pool-header">
+          <div class="pool-letter">D</div>
+          <div>
+            <div class="pool-title">Pool D</div>
+            <div class="pool-sub">6 players · Court 2</div>
+          </div>
+        </div>
+        <div class="pool-players">
+          <div class="player-row">
+            <div class="player-num">1</div>
+            <div class="player-name">Player Name 1</div>
+            <span class="player-badge badge-seed">Seed 4</span>
+          </div>
+          <div class="player-row">
+            <div class="player-num">2</div>
+            <div class="player-name">Player Name 2</div>
+          </div>
+          <div class="player-row">
+            <div class="player-num">3</div>
+            <div class="player-name">Player Name 3</div>
+          </div>
+          <div class="player-row">
+            <div class="player-num">4</div>
+            <div class="player-name">Player Name 4</div>
+          </div>
+          <div class="player-row">
+            <div class="player-num">5</div>
+            <div class="player-name">Player Name 5</div>
+          </div>
+          <div class="player-row">
+            <div class="player-num">6</div>
+            <div class="player-name">Player Name 6</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── SCHEDULE ── -->
+<section id="schedule">
+  <div class="container">
+    <div class="section-header">
+      <div class="tag">📅 Schedule</div>
+      <h2>Match schedule</h2>
+      <p>3 days of intense badminton action</p>
+    </div>
+    <div class="schedule-list">
+
+      <div class="schedule-day">
+        <div class="schedule-day-header">
+          <span class="day-label">Day 1 — Pool Stage</span>
+          <span class="day-date">July 20, 2025</span>
+        </div>
+        <div class="schedule-items">
+          <div class="schedule-item">
+            <div class="schedule-time">9:00 AM</div>
+            <div class="schedule-event">Opening ceremony + draw</div>
+          </div>
+          <div class="schedule-item">
+            <div class="schedule-time">10:00 AM</div>
+            <div class="schedule-event">Pool A vs Pool B matches begin</div>
+            <div class="schedule-pool">Court 1 & 2</div>
+          </div>
+          <div class="schedule-item">
+            <div class="schedule-time">2:00 PM</div>
+            <div class="schedule-event">Pool C vs Pool D matches begin</div>
+            <div class="schedule-pool">Court 1 & 2</div>
+          </div>
+          <div class="schedule-item">
+            <div class="schedule-time">6:00 PM</div>
+            <div class="schedule-event">End of Day 1</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="schedule-day">
+        <div class="schedule-day-header">
+          <span class="day-label">Day 2 — Pool Stage continues</span>
+          <span class="day-date">July 21, 2025</span>
+        </div>
+        <div class="schedule-items">
+          <div class="schedule-item">
+            <div class="schedule-time">9:00 AM</div>
+            <div class="schedule-event">Remaining pool matches</div>
+            <div class="schedule-pool">All courts</div>
+          </div>
+          <div class="schedule-item">
+            <div class="schedule-time">4:00 PM</div>
+            <div class="schedule-event">Pool stage concludes — standings announced</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="schedule-day">
+        <div class="schedule-day-header">
+          <span class="day-label">Day 3 — Knockouts & Final</span>
+          <span class="day-date">July 22, 2025</span>
+        </div>
+        <div class="schedule-items">
+          <div class="schedule-item">
+            <div class="schedule-time">9:00 AM</div>
+            <div class="schedule-event">Quarter-finals</div>
+            <div class="schedule-pool">Court 1 & 2</div>
+          </div>
+          <div class="schedule-item">
+            <div class="schedule-time">12:00 PM</div>
+            <div class="schedule-event">Semi-finals</div>
+            <div class="schedule-pool">Court 1</div>
+          </div>
+          <div class="schedule-item">
+            <div class="schedule-time">3:00 PM</div>
+            <div class="schedule-event">🏆 Grand Final</div>
+            <div class="schedule-pool">Court 1</div>
+          </div>
+          <div class="schedule-item">
+            <div class="schedule-time">5:00 PM</div>
+            <div class="schedule-event">🎉 Prize ceremony & celebration</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── FORMAT ── -->
+<section id="format">
+  <div class="container">
+    <div class="section-header">
+      <div class="tag">📖 Format</div>
+      <h2>How it works</h2>
+      <p>From pool stage to the final — the complete tournament format</p>
+    </div>
+    <div class="format-steps">
+      <div class="format-step">
+        <div class="step-num">1</div>
+        <h3>Pool Stage</h3>
+        <p>24 players split into 4 pools of 6. Everyone plays each other in their pool.</p>
+      </div>
+      <div class="format-step">
+        <div class="step-num">2</div>
+        <h3>Qualification</h3>
+        <p>Top 2 from each pool advance. 8 players qualify for the knockout stage.</p>
+      </div>
+      <div class="format-step">
+        <div class="step-num">3</div>
+        <h3>Quarter-finals</h3>
+        <p>8 players → 4 winners. Best of 3 sets, 21 points per set.</p>
+      </div>
+      <div class="format-step">
+        <div class="step-num">4</div>
+        <h3>Semi-finals</h3>
+        <p>4 players → 2 finalists. High intensity best of 3 matches.</p>
+      </div>
+      <div class="format-step">
+        <div class="step-num">5</div>
+        <h3>Grand Final</h3>
+        <p>The last 2 standing battle it out for the Shuttle Showdown trophy!</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════
+     SECTIONS BELOW ARE COMMENTED OUT (not live yet)
+     Uncomment each section after the tournament ends
+     ══════════════════════════════════════════════════
+
+<!-- WINNERS SECTION — uncomment after final
+<section id="winners">
+  ...winners content here...
+</section>
+-->
+
+<!-- SEMIFINALISTS SECTION — uncomment after semis
+<section id="semifinalists">
+  ...semifinalists content here...
+</section>
+-->
+
+<!-- MATCH RESULTS — uncomment after matches
+<section id="matches">
+  ...results content here...
+</section>
+-->
+
+<!-- PHOTO GALLERY — uncomment after tournament
+<section id="gallery">
+  ...gallery content here...
+</section>
+-->
+
+<!-- ── FOOTER ── -->
+<footer>
+  <p>🏸 <strong>Shuttle Showdown 2026</strong> &nbsp;·&nbsp; Bangalore, India</p>
+  <p style="margin-top: 8px;">A friendly tournament among friends &nbsp;·&nbsp; Hosted on <strong>Vercel</strong></p>
+</footer>
+
+<!-- COUNTDOWN SCRIPT -->
+<script>
+  // ← SET YOUR TOURNAMENT START DATE HERE
+  const tournamentDate = new Date('2026-07-18T09:00:00');
+
+  function updateCountdown() {
+    const now = new Date();
+    const diff = tournamentDate - now;
+    if (diff <= 0) {
+      document.querySelector('.countdown-bar p').textContent = '🏸 Tournament is LIVE!';
+      return;
+    }
+    const days  = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const mins  = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    const secs  = Math.floor((diff % (1000 * 60)) / 1000);
+    document.getElementById('cd-days').textContent  = String(days).padStart(2,'0');
+    document.getElementById('cd-hours').textContent = String(hours).padStart(2,'0');
+    document.getElementById('cd-mins').textContent  = String(mins).padStart(2,'0');
+    document.getElementById('cd-secs').textContent  = String(secs).padStart(2,'0');
+  }
+  updateCountdown();
+  setInterval(updateCountdown, 1000);
+</script>
+
+</body>
+</html>
